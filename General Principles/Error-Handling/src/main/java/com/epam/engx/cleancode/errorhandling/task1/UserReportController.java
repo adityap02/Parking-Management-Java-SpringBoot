@@ -7,9 +7,15 @@ public class UserReportController {
     private UserReportBuilder userReportBuilder;
 
     public String getUserTotalOrderAmountView(String userId, Model model){
-        String totalMessage = getUserTotalMessage(userId);
-        if (totalMessage == null)
-            return "technicalError";
+        String totalMessage;
+        
+        try {
+        	 totalMessage = getUserTotalMessage(userId);
+        }
+        catch(NullPointerException e){
+        	 return "technicalError";
+        }
+        
         model.addAttribute("userTotalMessage", totalMessage);
         return "userTotal";
     }
@@ -19,7 +25,7 @@ public class UserReportController {
         Double amount = userReportBuilder.getUserTotalOrderAmount(userId);
 
         if (amount == null)
-            return null;
+        	throw new NullPointerException("No Amount");
 
         if (amount == -1)
             return "WARNING: User ID doesn't exist.";
