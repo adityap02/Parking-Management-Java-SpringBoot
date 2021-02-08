@@ -5,36 +5,33 @@ import com.epam.engx.cleancode.comments.task1.thirdpartyjar.InvalidInputExceptio
 public class MortgageInstallmentCalculator {
 
     /**
-     *
-     * @param p principal amount
-     * @param t term of mortgage in years
-     * @param r rate of interest
+     *Calculate Monthly Payment
+     * @param principal principal amount
+     * @param term term of mortgage in years
+     * @param rate rate of interest
      * @return monthly payment amount
      */
     public static double calculateMonthlyPayment(
-            int p, int t, double r) {
+            int principal, int term, double rate) {
 
-        //cannot have negative loanAmount, term duration and rate of interest
-        if (p < 0 || t <= 0 || r < 0) {
+        
+        if (principal < 0 || term <= 0 || rate < 0) {
             throw new InvalidInputException("Negative values are not allowed");
         }
 
-        // Convert interest rate into a decimal - eg. 6.5% = 0.065
-        r /= 100.0;
+        
+        rate /= 100.0;
 
-        // convert term in years to term in months
-        double tim = t * 12;
+        // convert term from years to months
+        double termMonths = term * 12;
 
-        //for zero interest rates
-        if(r==0)
-            return  p/tim;
+        
+        if(rate==0)
+            return  principal/termMonths;
 
-        // convert into monthly rate
-        double m = r / 12.0;
+        double monthlyRate = rate / 12.0;
 
-        // Calculate the monthly payment
-        // The Math.pow() method is used calculate values raised to a power
-        double monthlyPayment = (p * m) / (1 - Math.pow(1 + m, -tim));
+        double monthlyPayment = (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -termMonths));
 
         return monthlyPayment;
     }
