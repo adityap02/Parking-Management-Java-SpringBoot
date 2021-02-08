@@ -10,29 +10,16 @@ public class Order {
     private List<Product> products;
 
     public Double getPriceOfAvailableProducts() {
-
-        
-        removeUnAvailableProducts();
-        
-
-        return orderPriceOfProducts();
-    }
-    
-    private Double orderPriceOfProducts() {
-        double orderPrice = 0.0d;
-        for (Product product : products)
-            orderPrice += product.getProductPrice();
-        return orderPrice;
-    }
-    
-    
-    private void removeUnAvailableProducts() {
+        double orderPrice = 0.0;
         Iterator<Product> iterator = products.iterator();
         while (iterator.hasNext()) {
-            Product product = iterator.next();
-            if (!product.isAvailable())
+            Product p = iterator.next();
+            if (!p.isAvailable())
                 iterator.remove();
         }
+        for (Product p : products)
+            orderPrice += p.getProductPrice();
+        return orderPrice;
     }
 
 
