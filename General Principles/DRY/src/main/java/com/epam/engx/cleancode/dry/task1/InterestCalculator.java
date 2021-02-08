@@ -33,12 +33,10 @@ public class InterestCalculator implements Profitable {
         startCalendar.setTime(from);
         Calendar endCalendar = new GregorianCalendar();
         endCalendar.setTime(to);
-
-        int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-        if (endCalendar.get(Calendar.DAY_OF_YEAR) + LEAP_YEAR_SHIFT < startCalendar.get(Calendar.DAY_OF_YEAR))
-            return diffYear - 1;
-        return diffYear;
+        return diffYear(endCalendar, startCalendar);
     }
+    
+    
 
     private BigDecimal interest(AccountDetails accountDetails) {
         double interest = 0;
@@ -61,10 +59,15 @@ public class InterestCalculator implements Profitable {
         Calendar endCalendar = new GregorianCalendar();
         endCalendar.setTime(new Date());
 
+        return diffYear(endCalendar, startCalendar);
+
+    }
+    private int diffYear(Calendar endCalendar, Calendar startCalendar) {
         int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
         if (endCalendar.get(Calendar.DAY_OF_YEAR) + LEAP_YEAR_SHIFT < startCalendar.get(Calendar.DAY_OF_YEAR))
             return diffYear - 1;
         return diffYear;
-
     }
+
+    
 }
