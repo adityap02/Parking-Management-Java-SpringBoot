@@ -15,12 +15,17 @@ public abstract class Account implements User {
     public Level getActivityLevel() {
         validateAccountForLevel();
 
-        int reviewAnswers = 0;
-        for (Review r : getAllReviews())
-            reviewAnswers += r.getAnswers().size();
+        int reviewAnswers = sumOfReviewAnswers();
 
         return getLevelByReviews(reviewAnswers);
 
+    }
+    
+    private int sumOfReviewAnswers(){
+        int reviewAnswers = 0;
+        for (Review r : getAllReviews())
+            reviewAnswers += r.getAnswers().size();
+        return reviewAnswers
     }
 
     private void validateAccountForLevel() {
