@@ -47,55 +47,67 @@ public class Print implements Command {
 
     private String getEmptyTable(String tableName) {
         String textEmptyTable = "║ Table '" + tableName + "' is empty or does not exist ║";
-        String result = "╔";
+        StringBuilder result = new StringBuilder("╔");
+        
+        addEqualSign(result, textEmptyTable);
+        
+        result.append("╗\n").append(textEmptyTable).append("\n ╚");
+
+        addEqualSign(result, textEmptyTable);
+        
+        result.append("╝\n");
+        return result.toString();
+    }
+    
+    private void addEqualSign(StringBuilder result, String textEmptyTable) {
         for (int i = 0; i < textEmptyTable.length() - 2; i++) {
-            result += "═";
+            result.append("═");
         }
-        result += "╗\n";
-        result += textEmptyTable + "\n";
-        result += "╚";
-        for (int i = 0; i < textEmptyTable.length() - 2; i++) {
-            result += "═";
-        }
-        result += "╝\n";
-        return result;
     }
 
     private int getMaxColumnSize(List<DataSet> dataSets) {
         int maxLength = 0;
         if (dataSets.size() > 0) {
-            List<String> columnNames = dataSets.get(0).getColumnNames();
-            for (String columnName : columnNames) {
-                if (columnName.length() > maxLength) {
-                    maxLength = columnName.length();
-                }
-            }
-            for (DataSet dataSet : dataSets) {
+            maxLength = getMaxColumnNameLength(dataSets);
+        
+        for (DataSet dataSet : dataSets) {
                 List<Object> values = dataSet.getValues();
                 for (Object value : values) {
-//                    if (value instanceof String)
-                        if (String.valueOf(value).length() > maxLength) {
+
+                	if (String.valueOf(value).length() > maxLength) {
                             maxLength = String.valueOf(value).length();
                         }
                 }
+            }
+          
+        }
+        return maxLength;
+    }
+    
+    private int getMaxColumnNameLength(List<DataSet> dataSets) {
+    	int maxLength = 0;
+    	List<String> columnNames = dataSets.get(0).getColumnNames();
+        for (String columnName : columnNames) {
+            if (columnName.length() > maxLength) {
+                maxLength = columnName.length();
             }
         }
         return maxLength;
     }
 
+    
+
     private String getStringTableData(List<DataSet> dataSets) {
         int rowsCount;
         rowsCount = dataSets.size();
-        int maxColumnSize = getMaxColumnSize(dataSets);
+        int maxColumnSize = calculateMaxColumnSize(getMaxColumnSize(dataSets));
         String result = "";
-        if (maxColumnSize % 2 == 0) {
-            maxColumnSize += 2;
-        } else {
-            maxColumnSize += 3;
-        }
+       
         int columnCount = getColumnCount(dataSets);
+        
         for (int row = 0; row < rowsCount; row++) {
             List<Object> values = dataSets.get(row).getValues();
+        
             result += "║";
             for (int column = 0; column < columnCount; column++) {
                 int valuesLength = String.valueOf(values.get(column)).length();
@@ -157,14 +169,10 @@ public class Print implements Command {
     }
 
     private String getHeaderOfTheTable(List<DataSet> dataSets) {
-        int maxColumnSize = getMaxColumnSize(dataSets);
+        int maxColumnSize = calculateMaxColumnSize(getMaxColumnSize(dataSets);
         String result = "";
         int columnCount = getColumnCount(dataSets);
-        if (maxColumnSize % 2 == 0) {
-            maxColumnSize += 2;
-        } else {
-            maxColumnSize += 3;
-        }
+
         result += "╔";
         for (int j = 1; j < columnCount; j++) {
             for (int i = 0; i < maxColumnSize; i++) {
@@ -228,4 +236,14 @@ public class Print implements Command {
         }
         return result;
     }
+    
+    private int calculateMaxColumnSize(int maxColumnSize) {
+    	if (maxColumnSize % 2 == 0) {
+            maxColumnSize += 2;
+        	} else {
+            maxColumnSize += 3;
+        	}
+    	return maxColumnsize;
+    }
+    
 }

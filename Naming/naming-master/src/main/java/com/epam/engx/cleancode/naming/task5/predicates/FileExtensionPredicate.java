@@ -3,11 +3,11 @@ package com.epam.engx.cleancode.naming.task5.predicates;
 
 import com.epam.engx.cleancode.naming.task5.thirdpartyjar.Predicate;
 
-public class FileExtPred implements Predicate<String> {
+public class FileExtensionPredicate implements Predicate<String> {
 
     private String[] extensions;
 
-    public FileExtPred(String[] extensions) {
+    public FileExtensionPredicate(String[] extensions) {
         this.extensions = extensions;
     }
 
