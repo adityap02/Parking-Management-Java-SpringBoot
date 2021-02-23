@@ -13,11 +13,18 @@ public class FileExtensionPredicate implements Predicate<String> {
 
     @Override
     public boolean test(String fileName) {
-        for (String extension : extensions) {
-            if (fileName.toLowerCase().endsWith(extension)) {
-                return true;
-            }
-        }
-        return false;
+		List<String> fileExtensions = Arrays.asList(extensions);
+		Stream<String> data = fileExtensions.stream().filter(e -> fileName.toLowerCase().endsWith(e));
+    	return(isValidFileExtension(data));
+		/*
+		 * for (String extension : extensions) { if
+		 * (fileName.toLowerCase().endsWith(extension)) { return true; } } return false;
+		 */
+    	boolean isValidFileExtension(Stream<String> data) {
+    		if(data.count(>0))
+    			return true;
+    		return false;
+    					
+    	}
     }
 }

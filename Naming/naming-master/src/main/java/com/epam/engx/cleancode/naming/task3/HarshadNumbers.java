@@ -4,8 +4,8 @@ public class HarshadNumbers {
 
 	public String main() {
 		StringBuilder result = new StringBuilder();
-		long Limit = 200; 
-		for (int i = 1; i <= Limit; i++) {
+		long limit = 200; 
+		for (int i = 1; i <= limit; i++) {
 			if (i % loop(i) == 0) {
 				result.append(i).append("\n");
 			}

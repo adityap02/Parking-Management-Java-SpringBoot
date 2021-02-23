@@ -19,7 +19,10 @@ public class Order {
     }
     
     private Double orderPriceOfProducts() {
-        double orderPrice = 0.0d;
+    	
+    	return(products.stream().map(product -> product.getProductPrice()).reduce((double) 0,(sum,price) -> sum + price));
+    	
+        double orderPrice = 0.0;
         for (Product product : products)
             orderPrice += product.getProductPrice();
         return orderPrice;

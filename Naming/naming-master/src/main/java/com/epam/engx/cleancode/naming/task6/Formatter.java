@@ -18,8 +18,7 @@ public class Formatter {
 
     private String repeat(String symbol, int times) {
         String result = "";
-        for (int i = 0; i < times; i++)
-            result += symbol;
+        result=(symbol.repeat(times));
         return result;
     }
 }
