@@ -99,6 +99,7 @@ public class Print implements Command {
 
     private String getStringTableData(List<DataSet> dataSets) {
         int rowsCount;
+        String blankSpace = " ";
         rowsCount = dataSets.size();
         int maxColumnSize = calculateMaxColumnSize(getMaxColumnSize(dataSets));
         String result = "";
@@ -112,13 +113,18 @@ public class Print implements Command {
             for (int column = 0; column < columnCount; column++) {
                 int valuesLength = String.valueOf(values.get(column)).length();
                 if (valuesLength % 2 == 0) {
-                    for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
-                        result += " ";
-                    }
+                	
+					result += blankSpace.repeat((maxColumnSize - valuesLength) / 2);
+                	/*
+					 * for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) { result += " ";
+					 * }
+					 */
                     result += String.valueOf(values.get(column));
-                    for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
-                        result += " ";
-                    }
+                    result += blankSpace.repeat((maxColumnSize - valuesLength) / 2);
+                    /*
+					 * for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) { result += " ";
+					 * }
+					 */
                     result += "║";
                 } else {
                     for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {

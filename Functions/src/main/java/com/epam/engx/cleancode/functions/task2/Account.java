@@ -22,10 +22,12 @@ public abstract class Account implements User {
     }
     
     private int sumOfReviewAnswers(){
-        int reviewAnswers = 0;
-        for (Review r : getAllReviews())
-            reviewAnswers += r.getAnswers().size();
-        return reviewAnswers
+    	
+    	return(getAllReviews().stream().map(r -> r.getAnswers().size()).reduce(0,(sum,reviewAnswers) -> sum + reviewAnswers));
+		/*
+		 * int reviewAnswers = 0; for (Review r : getAllReviews()) reviewAnswers +=
+		 * r.getAnswers().size(); return reviewAnswers
+		 */
     }
 
     private void validateAccountForLevel() {
