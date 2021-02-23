@@ -14,10 +14,10 @@ public class CollectionOrderServiceTestHelper {
     }
 
     public void setNotificationManager(NotificationManagerMock notificationManagerMock, Submitable collectOrderService) {
-        ((CollectOrderService) collectOrderService).setSer2(notificationManagerMock);
+        ((CollectOrderService) collectOrderService).setnotificationManager(notificationManagerMock);
     }
 
     public void setCollectionService(Submitable collectOrderService, CollectionService collectionServiceStub) {
-        ((CollectOrderService) collectOrderService).setSer1(collectionServiceStub);
+        ((CollectOrderService) collectOrderService).setcollectionService(collectionServiceStub);
     }
 }

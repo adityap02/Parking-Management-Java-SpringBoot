@@ -1,6 +1,6 @@
 package com.epam.engx.cleancode.naming.task5;
 
-import com.epam.engx.cleancode.naming.task5.predicates.FileExtPred;
+import com.epam.engx.cleancode.naming.task5.predicates.FileExtensionPredicate;
 import com.epam.engx.cleancode.naming.task5.thirdpartyjar.InvalidDirectoryException;
 import com.epam.engx.cleancode.naming.task5.thirdpartyjar.InvalidFileTypeException;
 import com.epam.engx.cleancode.naming.task5.thirdpartyjar.PropertyUtil;
@@ -43,21 +43,21 @@ public final class FileManager {
     }
 
     private boolean isInvalidImage(String fileName) {
-        FileExtPred imageExtensionsPredicate = new FileExtPred(imageExtensions);
+        FileExtensionPredicate imageExtensionsPredicate = new FileExtensionPredicate(imageExtensions);
         return !imageExtensionsPredicate.test(fileName);
     }
 
     private boolean isInvalidDocument(String fileName) {
-        FileExtPred documentExtensionsPredicate = new FileExtPred(documentExtensions);
+        FileExtensionPredicate documentExtensionsPredicate = new FileExtensionPredicate(documentExtensions);
         return !documentExtensionsPredicate.test(fileName);
     }
 
     private List<String> files(String directoryPath, String[] allowedExtensions) {
-        final FileExtPred pred = new FileExtPred(allowedExtensions);
+        final FileExtensionPredicate pred = new FileExtensionPredicate(allowedExtensions);
         return Arrays.asList(getDirectory(directoryPath).list(getFilenameFilterByPredicate(pred)));
     }
 
-    private FilenameFilter getFilenameFilterByPredicate(final FileExtPred predicate) {
+    private FilenameFilter getFilenameFilterByPredicate(final FileExtensionPredicate predicate) {
         return new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {

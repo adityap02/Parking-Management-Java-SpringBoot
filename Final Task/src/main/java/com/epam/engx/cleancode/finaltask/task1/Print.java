@@ -175,7 +175,7 @@ public class Print implements Command {
     }
 
     private String getHeaderOfTheTable(List<DataSet> dataSets) {
-        int maxColumnSize = calculateMaxColumnSize(getMaxColumnSize(dataSets);
+        int maxColumnSize = calculateMaxColumnSize(getMaxColumnSize(dataSets));
         String result = "";
         int columnCount = getColumnCount(dataSets);
 
@@ -249,7 +249,7 @@ public class Print implements Command {
         	} else {
             maxColumnSize += 3;
         	}
-    	return maxColumnsize;
+    	return maxColumnSize;
     }
     
 }

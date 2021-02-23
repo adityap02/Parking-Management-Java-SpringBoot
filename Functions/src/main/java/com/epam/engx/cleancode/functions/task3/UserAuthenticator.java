@@ -1,5 +1,6 @@
 package com.epam.engx.cleancode.functions.task3;
 
+import com.epam.engx.cleancode.functions.task2.thirdpartyjar.NotActivUserException;
 import com.epam.engx.cleancode.functions.task3.thirdpartyjar.SessionManager;
 import com.epam.engx.cleancode.functions.task3.thirdpartyjar.User;
 import com.epam.engx.cleancode.functions.task3.thirdpartyjar.UserService;
@@ -12,15 +13,14 @@ public abstract class UserAuthenticator implements UserService {
         return loginUser(getUserByName(userName), password);
     }
 
-    private User loginUser(User user, String password) {
-        try {
+    private User loginUser(User user, String password)  {
+        
     	if (isPasswordCorrect(user, password)) {
             sessionManager.setCurrentUser(user);
             return user;
         }
-        }
-        throw new Exception("Username or Password Incorrect");
-        
+        throw new NotActivUserException();
+               
     }
 
     public void setSessionManager(SessionManager sessionManager) {
