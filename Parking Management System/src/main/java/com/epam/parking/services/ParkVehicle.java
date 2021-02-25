@@ -2,11 +2,15 @@ package com.epam.parking.services;
 
 import com.epam.parking.database.DatabaseModule;
 import com.epam.parking.database.Vehicle;
-import com.epam.parking.exceptions.IncorrectVehicleException;
+
 
 import java.time.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ParkVehicle {
+	private static final Logger LOGGER = LogManager.getLogger(ParkVehicle.class);
 	DatabaseModule databaseModule;
 	RandomParkingGenrator randomParking = new RandomParkingGenrator(databaseModule);
 
@@ -23,17 +27,16 @@ public class ParkVehicle {
 			Vehicle v = new Vehicle(licensePlateNumber, parkingArea, parkingSlot, inTime, 0);
 			databaseModule.addVehicleToSlot(v);
 			databaseModule.addVehicleToLedger(licensePlateNumber, parkingArea, parkingSlot);
-			System.out.println("Your Vehicle " + licensePlateNumber + " is Parked at Parking Area: " + parkingArea
+			LOGGER.info("Your Vehicle " + licensePlateNumber + " is Parked at Parking Area: " + parkingArea
 					+ " & Slot is " + parkingSlot);
 		} catch (IllegalArgumentException a) {
-			System.out.println(a.getMessage());
+			LOGGER.warn(a.getMessage());
 		}
 	}
 
 	long getInTime() {
 		Instant instant = Instant.now();
-		long timeStampSeconds = instant.getEpochSecond();
-		return timeStampSeconds;
+		return instant.getEpochSecond();
 	}
 
 }

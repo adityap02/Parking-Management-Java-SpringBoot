@@ -5,20 +5,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.epam.parking.exceptions.DuplicateEntryException;
+
 public class DatabaseModule {
 
-	public static Map<String, ArrayList<Vehicle>> parkingData = new HashMap<>();
-	public static Map<String, String> parkingLedger = new HashMap();
+	private static Map<String, ArrayList<Vehicle>> parkingData = new HashMap<>();
+	private static Map<String, String> parkingLedger = new HashMap<>();
 
-	public void addNewParkingArea(String parkingName, int numberOfParkingSlots) throws Exception {
+	public void addNewParkingArea(String parkingName, int numberOfParkingSlots) throws DuplicateEntryException {
 		if (parkingData.containsKey(parkingName)) {
-			throw new Exception("Parking Name: " + parkingName + " Already Exists");
+			throw new DuplicateEntryException(" Parking Name " + parkingName + " Already Exists");
 		} else
 			parkingData.put(parkingName, new ArrayList<>(Arrays.asList(new Vehicle[numberOfParkingSlots])));
 	}
 
 	public void addVehicleToSlot(Vehicle v) {
-		parkingData.get(v.parkingArea).set(v.parkingSlot, v);
+		parkingData.get(v.getParkingArea()).set(v.getParkingSlot(), v);
 	}
 
 	public void addVehicleToLedger(String licensePlateNumber, String parkingArea, int parkingSlot) {
@@ -31,12 +33,12 @@ public class DatabaseModule {
 
 	public String getParkingArea(String licensePlateNumber) {
 
-		String parkingArea[] = DatabaseModule.parkingLedger.get(licensePlateNumber).toString().split("-");
+		String[] parkingArea = DatabaseModule.parkingLedger.get(licensePlateNumber).split("-");
 		return parkingArea[0];
 	}
 
 	public int getParkingSlot(String licensePlateNumber) {
-		String parkingSlot[] = DatabaseModule.parkingLedger.get(licensePlateNumber).toString().split("-");
+		String[] parkingSlot = DatabaseModule.parkingLedger.get(licensePlateNumber).split("-");
 		return Integer.parseInt(parkingSlot[1]);
 	}
 
@@ -47,4 +49,10 @@ public class DatabaseModule {
 	public void removeVehicleFromParkingLedger(String licensePlateNumber) {
 		parkingLedger.remove(licensePlateNumber);
 	}
+
+	// Getters & Setters
+	public Map<String, ArrayList<Vehicle>> getParkingData() {
+		return parkingData;
+	}
+
 }

@@ -1,10 +1,13 @@
 package com.epam.parking.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.epam.parking.database.DatabaseModule;
 import com.epam.parking.database.Vehicle;
 
 public class PrintAllSlots {
-
+	private static final Logger LOGGER = LogManager.getLogger(PrintAllSlots.class);
 	DatabaseModule databaseModule;
 
 	public PrintAllSlots(DatabaseModule databaseModule) {
@@ -14,17 +17,15 @@ public class PrintAllSlots {
 	public void execute() {
 		
 
-		for (String parkingArea : databaseModule.parkingData.keySet()) {
-			System.out.println("****************************");
-			System.out.println("Parking Area :" + parkingArea);
-			System.out.println("Slot \t Status ");
+		for (String parkingArea : databaseModule.getParkingData().keySet()) {
+			LOGGER.info("**************************** \n Parking Area : "+ parkingArea + "Slot \t Status ");
 			int i = 0;
-			for (Vehicle v : databaseModule.parkingData.get(parkingArea)) {
+			for (Vehicle v : databaseModule.getParkingData().get(parkingArea)) {
 
 				if (v == null) {
-					System.out.println(i + "    \t " + " Vaccant ");
+					LOGGER.info(i + "    \t " + " Vaccant ");
 				} else {
-					System.out.println(i + "    \t  " + v.lisencePlate);
+					LOGGER.info(i + "    \t  " + v.getLisencePlate());
 				}
 				i++;
 			}

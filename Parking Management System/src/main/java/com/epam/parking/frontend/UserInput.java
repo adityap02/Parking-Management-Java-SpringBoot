@@ -2,13 +2,17 @@ package com.epam.parking.frontend;
 
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.epam.parking.exceptions.IncorrectVehicleException;
 
 public class UserInput {
+	private static final Logger LOGGER = LogManager.getLogger(UserInput.class);
 	Scanner input = new Scanner(System.in);
 
 	public String getVehicleNumnberFromUser() throws IncorrectVehicleException {
-		System.out.println("Please Enter License Plate Number");
+		LOGGER.info("Please Enter License Plate Number");
 		String licensePlateNumber = input.nextLine();
 		if (checkValidLicensePlate(licensePlateNumber)) {
 			return licensePlateNumber;
@@ -17,15 +21,13 @@ public class UserInput {
 	}
 
 	public String getParkingAreaFromUser() {
-		System.out.println("Please Enter a Name for your parking");
-		String parkingName = input.nextLine();
-		return parkingName;
+		LOGGER.info("Please Enter a Name for your parking");
+		return input.nextLine();
 	}
 
 	public int getNumberOfSlotsFromUser() {
-		System.out.println("Enter Number of slots in Parking Area");
-		int numberOfParkingSlots = input.nextInt();
-		return numberOfParkingSlots;
+		LOGGER.info("Enter Number of slots in Parking Area");
+		return input.nextInt();
 	}
 
 	public static boolean checkValidLicensePlate(String licensePlateNumber) {

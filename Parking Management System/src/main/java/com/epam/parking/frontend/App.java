@@ -1,13 +1,19 @@
 package com.epam.parking.frontend;
 
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
-import com.epam.parking.database.*;
+import org.apache.logging.log4j.*;
+
+import com.epam.parking.database.DatabaseModule;
 import com.epam.parking.exceptions.IncorrectVehicleException;
-import com.epam.parking.services.*;
+import com.epam.parking.services.AddNewParking;
+import com.epam.parking.services.ParkVehicle;
+import com.epam.parking.services.PrintAllSlots;
+import com.epam.parking.services.UnparkVehicle;
 
 public class App {
-
+	private static final Logger LOGGER = LogManager.getLogger(App.class);
 	DatabaseModule db;
 	UserInput userInput = new UserInput();
 
@@ -20,15 +26,10 @@ public class App {
 		int menu;
 
 		while (true) {
+			LOGGER.info(
+					"WELCOME TO PARKING MANAGEMENT \n1: Create a Parking Area\n2: Park Vehicle\n3: Unpark Vehicle\n4: Print all Slots Report\n5: Exit");
+			LOGGER.info("Enter your choice: ");
 
-			System.out.println("WELCOME TO PARKING MANAGEMENT");
-			System.out.println("1: Create a Parking Area");
-			System.out.println("2: Park Vehicle");
-			System.out.println("3: Unpark Vehicle");
-			System.out.println("4: Print all Slots Report");
-			System.out.println("5: Exit");
-
-			System.out.print("Enter your choice: ");
 			try {
 				Scanner input = new Scanner(System.in);
 				menu = input.nextInt();
@@ -41,11 +42,11 @@ public class App {
 				}
 				case 2: {
 					ParkVehicle parkVehicle = new ParkVehicle(db);
-					String vehicleNumber= userInput.getVehicleNumnberFromUser();
-					if(db.isVehicleAlreadyParked(vehicleNumber)) {
+					String vehicleNumber = userInput.getVehicleNumnberFromUser();
+					if (db.isVehicleAlreadyParked(vehicleNumber)) {
 						throw new IncorrectVehicleException("Vehicle Already Parked");
-					}else {
-					parkVehicle.execute(vehicleNumber);
+					} else {
+						parkVehicle.execute(vehicleNumber);
 					}
 					break;
 				}
@@ -66,16 +67,15 @@ public class App {
 					break;
 				}
 
-				default: {
-					System.out.println("Please Choose Correct Option");
-				}
+				default:
+					LOGGER.warn("Wrong Input : Please Choose Correct Option");
 
 				}
 			} catch (InputMismatchException e) {
-				System.out.println("Invalid Input");
-				continue;
-			}catch (IncorrectVehicleException e) {
-				System.out.println(e);
+				LOGGER.warn("Invalid Input");
+				
+			} catch (IncorrectVehicleException e) {
+				LOGGER.warn(e+ "Invalid Input");
 			}
 		}
 	}
