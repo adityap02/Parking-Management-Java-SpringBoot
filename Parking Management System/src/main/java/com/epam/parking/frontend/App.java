@@ -17,11 +17,11 @@ public class App {
 	DatabaseModule db;
 	UserInput userInput = new UserInput();
 
-	App(DatabaseModule db) {
+	public App(DatabaseModule db) {
 		this.db = db;
 	}
 
-	void showMenu() {
+	public void showMenu() {
 
 		int menu;
 
