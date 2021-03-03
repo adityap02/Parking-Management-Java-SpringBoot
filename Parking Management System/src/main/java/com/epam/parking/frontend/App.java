@@ -15,7 +15,7 @@ import com.epam.parking.services.UnparkVehicle;
 public class App {
 	private static final Logger LOGGER = LogManager.getLogger(App.class);
 	DatabaseModule db;
-	UserInput userInput = new UserInput();
+	//UserInput userInput = new UserInput();
 
 	public App(DatabaseModule db) {
 		this.db = db;
@@ -31,18 +31,19 @@ public class App {
 			LOGGER.info("Enter your choice: ");
 
 			try {
+				UserInput userInput = new UserInput();
 				Scanner input = new Scanner(System.in);
 				menu = input.nextInt();
 
 				switch (menu) {
 				case 1: {
 					AddNewParking addNewParking = new AddNewParking(db);
-					addNewParking.createNewParking();
+					addNewParking.createNewParking(userInput.getParkingAreaFromUser(),userInput.getNumberOfSlotsFromUser());
 					break;
 				}
 				case 2: {
 					ParkVehicle parkVehicle = new ParkVehicle(db);
-					String vehicleNumber = userInput.getVehicleNumnberFromUser();
+					String vehicleNumber = userInput.getVehicleNumnberFromUser().toUpperCase();
 					if (db.isVehicleAlreadyParked(vehicleNumber)) {
 						throw new IncorrectVehicleException("Vehicle Already Parked");
 					} else {
@@ -75,7 +76,7 @@ public class App {
 				LOGGER.warn("Invalid Input");
 				
 			} catch (IncorrectVehicleException e) {
-				LOGGER.warn(e+ "Invalid Input");
+				LOGGER.warn(e+ " Invalid Input");
 			}
 		}
 	}

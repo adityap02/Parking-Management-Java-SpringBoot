@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.epam.parking.database.DatabaseModule;
-import com.epam.parking.database.Vehicle;
+import com.epam.parking.entity.Vehicle;
 
 public class UnparkVehicle {
 	private static final Logger LOGGER = LogManager.getLogger(UnparkVehicle.class);

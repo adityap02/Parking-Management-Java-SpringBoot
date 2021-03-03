@@ -1,7 +1,5 @@
 package com.epam.parking.services;
 
-import java.util.Scanner;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,18 +16,13 @@ public class AddNewParking {
 		this.databaseModule = databaseModule;
 	}
 
-	Scanner input = new Scanner(System.in);
-
-	public void createNewParking() {
-		String parkingName = userInput.getParkingAreaFromUser();
-		int numberOfParkingSlots = userInput.getNumberOfSlotsFromUser();
+	public void createNewParking(String parkingName, int numberOfParkingSlots) {
 		try {
 			databaseModule.addNewParkingArea(parkingName, numberOfParkingSlots);
 			LOGGER.info("Parking " + parkingName + " Created Successfully with " + numberOfParkingSlots + " Slots");
 		} catch (DuplicateEntryException e) {
 			LOGGER.warn(e);
 		}
-
 	}
 
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import com.epam.parking.database.DatabaseModule;
-import com.epam.parking.database.Vehicle;
-
+import com.epam.parking.entity.Vehicle;
+import com.epam.parking.exceptions.ParkingFullException;
 
 public class RandomParkingGenrator {
 	Random generator = new Random();
@@ -15,7 +15,7 @@ public class RandomParkingGenrator {
 		this.databaseModule = databaseModule;
 	}
 
-	String randomAreaGenrator() throws IllegalArgumentException {
+	String randomAreaGenrator() throws ParkingFullException {
 		if (databaseModule.getParkingData().isEmpty()) {
 			throw new IllegalArgumentException("No Parking Areas Found. Please Create a Parking Area First");
 		}
@@ -47,7 +47,7 @@ public class RandomParkingGenrator {
 		return emptySlots;
 	}
 
-	String getNextEmptyParkingArea() throws IllegalArgumentException {
+	String getNextEmptyParkingArea() throws ParkingFullException {
 		String emptyparkingArea = "";
 		for (String s : databaseModule.getParkingData().keySet()) {
 			if (!getEmptySlotsInParkingArea(s).isEmpty()) {
@@ -55,6 +55,6 @@ public class RandomParkingGenrator {
 				return emptyparkingArea;
 			}
 		}
-		throw new IllegalArgumentException("All Parking Areas Full");
+		throw new ParkingFullException("All Parking Areas Full");
 	}
 }

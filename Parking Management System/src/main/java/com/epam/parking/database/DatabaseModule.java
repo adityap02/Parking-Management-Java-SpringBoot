@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.epam.parking.entity.Vehicle;
 import com.epam.parking.exceptions.DuplicateEntryException;
 
 public class DatabaseModule {
@@ -54,5 +55,10 @@ public class DatabaseModule {
 	public Map<String, ArrayList<Vehicle>> getParkingData() {
 		return parkingData;
 	}
+
+	public Map<String, String> getParkingLedger() {
+		return parkingLedger;
+	}
+	
 
 }

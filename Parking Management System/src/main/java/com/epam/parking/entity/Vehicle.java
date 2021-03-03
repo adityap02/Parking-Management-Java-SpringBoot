@@ -1,4 +1,4 @@
-package com.epam.parking.database;
+package com.epam.parking.entity;
 
 public class Vehicle {
 
