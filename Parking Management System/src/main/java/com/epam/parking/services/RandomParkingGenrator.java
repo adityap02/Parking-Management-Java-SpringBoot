@@ -3,58 +3,43 @@ package com.epam.parking.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import com.epam.parking.database.DatabaseModule;
-import com.epam.parking.entity.Vehicle;
+
+import com.epam.parking.database.DBModules;
+import com.epam.parking.database.JPADatabaseModules;
+import com.epam.parking.entity.ParkingArea;
+import com.epam.parking.entity.SlotList;
 import com.epam.parking.exceptions.ParkingFullException;
 
 public class RandomParkingGenrator {
-	Random generator = new Random();
-	DatabaseModule databaseModule;
+	DBModules dbm;
 
-	public RandomParkingGenrator(DatabaseModule databaseModule) {
-		this.databaseModule = databaseModule;
+	public RandomParkingGenrator(DBModules dbm) {
+		this.dbm = dbm;
 	}
 
 	String randomAreaGenrator() throws ParkingFullException {
-		if (databaseModule.getParkingData().isEmpty()) {
-			throw new IllegalArgumentException("No Parking Areas Found. Please Create a Parking Area First");
+		List<ParkingArea> pAreaList = dbm.getParkingAreaObjectList();
+		if (pAreaList.isEmpty()) {
+			throw new ParkingFullException("No Empty Parking Areas");
 		}
-		Object[] parkingAreas = databaseModule.getParkingData().keySet().toArray();
-		String randomArea = (String) parkingAreas[new Random().nextInt(databaseModule.getParkingData().size())];
-		if (getEmptySlotsInParkingArea(randomArea).isEmpty()) {
-			randomArea = getNextEmptyParkingArea();
-		}
-		return randomArea;
+		return pAreaList.get(new Random().nextInt(pAreaList.size())).getName();
 	}
 
 	int randomSlotGenrator(String parkingArea) {
-		List<Integer> emptySlots = getEmptySlotsInParkingArea(parkingArea);
+		ParkingArea pArea = dbm.getParkingAreaObject(parkingArea);
+		List<SlotList> emptySlots = getEmptySlotsInParkingArea(pArea.getSlots());
 		int size = emptySlots.size();
-		int index = generator.nextInt(size);
-		return emptySlots.get(index);
-
+		int index = new Random().nextInt(size);
+		return emptySlots.get(index).getSlotNumber();
 	}
 
-	public List<Integer> getEmptySlotsInParkingArea(String parkingArea) {
-		int counter = 0;
-		List<Integer> emptySlots = new ArrayList<>();
-		for (Vehicle v : databaseModule.getParkingData().get(parkingArea)) {
-			if (v == null) {
-				emptySlots.add(counter);
+	public List<SlotList> getEmptySlotsInParkingArea(List<SlotList> slotsList) {
+		List<SlotList> emptySlots = new ArrayList<>();
+		for (SlotList s : slotsList) {
+			if (s.getSlotStatus().equals("empty")) {
+				emptySlots.add(s);
 			}
-			counter++;
 		}
 		return emptySlots;
-	}
-
-	String getNextEmptyParkingArea() throws ParkingFullException {
-		String emptyparkingArea = "";
-		for (String s : databaseModule.getParkingData().keySet()) {
-			if (!getEmptySlotsInParkingArea(s).isEmpty()) {
-				emptyparkingArea = s;
-				return emptyparkingArea;
-			}
-		}
-		throw new ParkingFullException("All Parking Areas Full");
 	}
 }

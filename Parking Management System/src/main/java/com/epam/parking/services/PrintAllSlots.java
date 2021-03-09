@@ -1,21 +1,39 @@
 
 package com.epam.parking.services;
 
-import com.epam.parking.database.DatabaseModule;
-import com.epam.parking.frontend.PrintSlots;
+import java.util.List;
+
+import com.epam.parking.database.DBModules;
+import com.epam.parking.entity.ParkingArea;
+import com.epam.parking.entity.SlotList;
+import com.epam.parking.frontend.PrintOnConsole;
 
 public class PrintAllSlots {
+	DBModules dbm;
+	PrintOnConsole print;
 
-	DatabaseModule databaseModule;
-	PrintSlots print;
-
-	public PrintAllSlots(DatabaseModule databaseModule) {
-		this.databaseModule = databaseModule;
-		print = new PrintSlots();
+	public PrintAllSlots(DBModules dbm) {
+		this.dbm = dbm;
+		print = new PrintOnConsole();
 	}
 
-	public void execute() {
-		print.printSlots(databaseModule.getParkingData());
+	public void execute() throws NullPointerException{
+		List<ParkingArea> pAreaList = dbm.getParkingAreaObjectList();
+		if(!pAreaList.isEmpty()) {
+		for (ParkingArea parkingArea : pAreaList) {
+			print.printInfo(
+					"**************************** \n Parking Area : " + parkingArea.getName() + "\n Slot \t Status ");
+
+			for (SlotList s : parkingArea.getSlots()) {
+				print.printInfo(s.getSlotNumber() + "    \t " + s.getSlotStatus());
+
+			}
+		}
+		}
+		else {
+			throw new NullPointerException("No Parking Data Available");
+		}	
+
 	}
 
 }

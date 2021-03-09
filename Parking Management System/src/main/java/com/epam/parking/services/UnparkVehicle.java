@@ -1,51 +1,49 @@
 package com.epam.parking.services;
 
-import java.time.Instant;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.epam.parking.database.DatabaseModule;
+import com.epam.parking.database.DBModules;
 import com.epam.parking.entity.Vehicle;
+import com.epam.parking.exceptions.IncorrectVehicleException;
+import com.epam.parking.frontend.PrintOnConsole;
 
 public class UnparkVehicle {
-	private static final Logger LOGGER = LogManager.getLogger(UnparkVehicle.class);
+	PrintOnConsole print;
 	static final int RATE = 7;
-	DatabaseModule databaseModule;
-	String licensePlateNumber;
-	String parkedSlot;
+	GetTimestamp getTimeStamp;
+	DBModules dbm;
 
-	public UnparkVehicle(DatabaseModule databaseModule) {
-		this.databaseModule = databaseModule;
+	public UnparkVehicle(DBModules dbm) {
+		print = new PrintOnConsole();
+		this.dbm = dbm;
+		getTimeStamp = new GetTimestamp();
 	}
 
-	public void execute(String licensePlateNumber) {
-		try {
-			String parkingArea = databaseModule.getParkingArea(licensePlateNumber);
-			int parkingSlot = databaseModule.getParkingSlot(licensePlateNumber);
-			databaseModule.removeVehicleFromParkingLedger(licensePlateNumber);
-			Vehicle v = databaseModule.getParkingData().get(parkingArea).get(parkingSlot);
-			setOutTime(v);
+	public void execute(String licensePlateNumber) throws IncorrectVehicleException {
+
+		if (!dbm.isVehicleAlreadyParked(licensePlateNumber)) {
+			throw new IncorrectVehicleException("Vehicle is Not Parked Yet");
+		} else {
+			Vehicle v = dbm.getVehicleObject(licensePlateNumber);
 			double invoice = createInvoice(v);
-			databaseModule.removeVehicleFromParkingData(parkingArea, parkingSlot);
-			LOGGER.info("******************* \n Your Vehicle number : " + licensePlateNumber
-					+ "is unparked from Parking Area : " + parkingArea + " Slot " + parkingSlot);
+			v.setInvoice(invoice);
+			dbm.updateParkingArea(v.getParkingArea(), v.getParkingSlot(), "empty");
+			dbm.removeVehicle(licensePlateNumber);
+			dbm.addLogToParkingBook(v);
+			print.printInfo("******************* \n Your Vehicle number : " + licensePlateNumber
+					+ "is unparked from Parking Area : " + v.getParkingArea() + " Slot " + v.getParkingSlot());
 
-			LOGGER.info("Your Parking Invoice is of Rupees : " + invoice + "\n *******************");
-
-		} catch (NullPointerException e) {
-			LOGGER.warn("This Vehicle is not already parked ");
+			print.printInfo("Your Parking Invoice is of Rupees : " + invoice + "\n *******************");
 		}
+
 	}
 
 	double createInvoice(Vehicle v) {
-		return RATE * (double) (v.getOutTime() - v.getIntime());
+		setOutTime(v);
+		double seconds = v.getOutTime() - v.getInTime();
+		return RATE * (seconds / 60);
 	}
 
 	void setOutTime(Vehicle v) {
-		Instant instant = Instant.now();
-		long timeStampSeconds = instant.getEpochSecond();
-		v.setOutTime(timeStampSeconds);
+		v.setOutTime(getTimeStamp.getCurrentTime());
 	}
 
 }

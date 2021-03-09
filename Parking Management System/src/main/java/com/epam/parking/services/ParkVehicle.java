@@ -1,42 +1,43 @@
 package com.epam.parking.services;
 
-import com.epam.parking.database.DatabaseModule;
+import com.epam.parking.database.DBModules;
 import com.epam.parking.entity.Vehicle;
+import com.epam.parking.exceptions.IncorrectVehicleException;
 import com.epam.parking.exceptions.ParkingFullException;
-
-import java.time.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.epam.parking.frontend.PrintOnConsole;
 
 public class ParkVehicle {
-	private static final Logger LOGGER = LogManager.getLogger(ParkVehicle.class);
-	DatabaseModule databaseModule;
+	PrintOnConsole print;
 	RandomParkingGenrator randomParking;
+	GetTimestamp getTimestamp;
+	DBModules dbm;
 
-	public ParkVehicle(DatabaseModule databaseModule) {
-		this.databaseModule = databaseModule;
+	public ParkVehicle(DBModules dbm) {
+		this.dbm = dbm;
+		print = new PrintOnConsole();
+		randomParking = new RandomParkingGenrator(dbm);
+		getTimestamp = new GetTimestamp();
 	}
 
-	public void execute(String licensePlateNumber) {
-		 randomParking = new RandomParkingGenrator(databaseModule);
+	public Vehicle execute(String licensePlateNumber) throws IncorrectVehicleException {
+		Vehicle vehicle = null;
+
 		try {
-			String parkingArea = randomParking.randomAreaGenrator();
-			int parkingSlot = randomParking.randomSlotGenrator(parkingArea);
-			long inTime = getInTime();
-			Vehicle v = new Vehicle(licensePlateNumber, parkingArea, parkingSlot, inTime, 0);
-			databaseModule.addVehicleToSlot(v);
-			databaseModule.addVehicleToLedger(licensePlateNumber, parkingArea, parkingSlot);
-			LOGGER.info("Your Vehicle " + licensePlateNumber + " is Parked at Parking Area: " + parkingArea
-					+ " & Slot is " + parkingSlot);
-		} catch (ParkingFullException a) {
-			LOGGER.warn(a.getMessage());
-		}
-	}
+			if (dbm.isVehicleAlreadyParked(licensePlateNumber)) {
+				throw new IncorrectVehicleException("Vehicle is Already Parked");
+			} else {
 
-	public long getInTime() {
-		Instant instant = Instant.now();
-		return instant.getEpochSecond();
+				String parkingArea = randomParking.randomAreaGenrator();
+				int parkingSlot = randomParking.randomSlotGenrator(parkingArea);
+				long inTime = getTimestamp.getCurrentTime();
+				vehicle = new Vehicle(licensePlateNumber, parkingArea, parkingSlot, inTime);
+				dbm.addVehicleToSlot(vehicle);
+				dbm.updateParkingArea(vehicle.getParkingArea(), vehicle.getParkingSlot(), vehicle.getLisencePlate());
+			}
+		} catch (ParkingFullException a) {
+			 print.printWarn(a.toString());
+		}
+		return vehicle;
 	}
 
 }

@@ -2,40 +2,48 @@ package com.epam.parking.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "parked_vehicle")
-public class Vehicle {
+public class ParkingBook {
 	@Id
-	@Column(length = 60)
-	private String lisencePlate;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	@Column(name = "license_plate_number")
+	private String licensePlateNumber;
+	@Column(name = "parking_area")
 	private String parkingArea;
+	@Column(name = "parking_slot")
 	private int parkingSlot;
+	@Column(name = "in_time")
 	private long inTime;
+	@Column(name = "out_time")
 	private long outTime;
+	@Column(name = "invoice")
 	private double invoice;
 
-	public Vehicle() {
+	public ParkingBook() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ParkingBook(Vehicle v) {
+
+		this.licensePlateNumber = v.getLisencePlate();
+		this.parkingArea = v.getParkingArea();
+		this.parkingSlot = v.getParkingSlot();
+		this.inTime = v.getInTime();
+		this.outTime = v.getOutTime();
+		this.invoice = v.getInvoice();
 	}
 
-	public Vehicle(String lisencePlate, String parkingArea, int parkingSlot, long inTime) {
-		this.lisencePlate = lisencePlate;
-		this.parkingArea = parkingArea;
-		this.parkingSlot = parkingSlot;
-		this.inTime = inTime;
-		this.outTime = 0;
-		this.invoice = 0;
-
+	public String getLicensePlateNumber() {
+		return licensePlateNumber;
 	}
 
-	public String getLisencePlate() {
-		return lisencePlate;
-	}
-
-	public void setLisencePlate(String lisencePlate) {
-		this.lisencePlate = lisencePlate;
+	public void setLicensePlateNumber(String licensePlateNumber) {
+		this.licensePlateNumber = licensePlateNumber;
 	}
 
 	public String getParkingArea() {

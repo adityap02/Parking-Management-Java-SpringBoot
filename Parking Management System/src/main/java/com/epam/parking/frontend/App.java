@@ -3,9 +3,12 @@ package com.epam.parking.frontend;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.epam.parking.database.DatabaseModule;
+import com.epam.parking.database.DBModules;
+import com.epam.parking.database.JPADatabaseModules;
+import com.epam.parking.exceptions.DuplicateEntryException;
 import com.epam.parking.exceptions.IncorrectVehicleException;
 import com.epam.parking.services.AddNewParking;
 import com.epam.parking.services.ParkVehicle;
@@ -14,12 +17,8 @@ import com.epam.parking.services.UnparkVehicle;
 
 public class App {
 	private static final Logger LOGGER = LogManager.getLogger(App.class);
-	DatabaseModule db;
-	//UserInput userInput = new UserInput();
-
-	public App(DatabaseModule db) {
-		this.db = db;
-	}
+	DBModules db = new JPADatabaseModules();
+	PrintOnConsole print = new PrintOnConsole();
 
 	public void showMenu() {
 
@@ -32,28 +31,29 @@ public class App {
 
 			try {
 				UserInput userInput = new UserInput();
+				@SuppressWarnings("resource")
 				Scanner input = new Scanner(System.in);
 				menu = input.nextInt();
 
 				switch (menu) {
 				case 1: {
 					AddNewParking addNewParking = new AddNewParking(db);
-					addNewParking.createNewParking(userInput.getParkingAreaFromUser(),userInput.getNumberOfSlotsFromUser());
+					print.printNewParkingArea(addNewParking.createNewParking(userInput.getParkingAreaFromUser(),
+							userInput.getNumberOfSlotsFromUser()));
+
 					break;
 				}
 				case 2: {
 					ParkVehicle parkVehicle = new ParkVehicle(db);
 					String vehicleNumber = userInput.getVehicleNumnberFromUser().toUpperCase();
-					if (db.isVehicleAlreadyParked(vehicleNumber)) {
-						throw new IncorrectVehicleException("Vehicle Already Parked");
-					} else {
-						parkVehicle.execute(vehicleNumber);
-					}
+					parkVehicle.execute(vehicleNumber);
+
 					break;
 				}
 				case 3: {
 					UnparkVehicle unparkVehicle = new UnparkVehicle(db);
-					unparkVehicle.execute(userInput.getVehicleNumnberFromUser());
+					String vehicleNumber = userInput.getVehicleNumnberFromUser().toUpperCase();
+					unparkVehicle.execute(vehicleNumber);
 					break;
 				}
 
@@ -74,16 +74,20 @@ public class App {
 				}
 			} catch (InputMismatchException e) {
 				LOGGER.warn("Invalid Input");
-				
+
 			} catch (IncorrectVehicleException e) {
-				LOGGER.warn(e+ " Invalid Input");
+				LOGGER.warn(" Invalid Input" + e);
+			} catch (DuplicateEntryException e) {
+				LOGGER.warn(e);
+			}catch (NullPointerException e) {
+				LOGGER.warn(e);
 			}
 		}
 	}
 
 	public static void main(String[] args) {
 
-		App app = new App(new DatabaseModule());
+		App app = new App();
 		app.showMenu();
 
 	}
