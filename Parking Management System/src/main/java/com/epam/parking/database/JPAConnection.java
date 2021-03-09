@@ -4,11 +4,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class DatabaseConnection {
+public class JPAConnection {
+	EntityManager entityManager;
 	EntityManagerFactory eFactory = Persistence.createEntityManagerFactory("my-local-db");
-	public EntityManager getEntityManager() {
+	
+	public EntityManager getEntity() {
 		return eFactory.createEntityManager();
-		
 	}
-
 }

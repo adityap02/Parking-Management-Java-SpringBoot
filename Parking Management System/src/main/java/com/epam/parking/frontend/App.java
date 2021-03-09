@@ -46,7 +46,7 @@ public class App {
 				case 2: {
 					ParkVehicle parkVehicle = new ParkVehicle(db);
 					String vehicleNumber = userInput.getVehicleNumnberFromUser().toUpperCase();
-					parkVehicle.execute(vehicleNumber);
+				print.printParkedVehicle(parkVehicle.execute(vehicleNumber));	
 
 					break;
 				}
@@ -76,7 +76,7 @@ public class App {
 				LOGGER.warn("Invalid Input");
 
 			} catch (IncorrectVehicleException e) {
-				LOGGER.warn(" Invalid Input" + e);
+				LOGGER.warn(" Invalid Input" + e.getMessage());
 			} catch (DuplicateEntryException e) {
 				LOGGER.warn(e);
 			}catch (NullPointerException e) {
