@@ -38,28 +38,15 @@ Throughout its development, the project adheres to clean code principles. This i
 - Efficient exception handling mechanisms.
 - Comprehensive documentation and comments for clarity.
 
-## Usage and Configuration
+# Requirements Documentation
 
-(Instructions on how to set up, configure, and run the application can be added here.)
-
-## Contributing
-
-Contributions to EPAM ParkMate are welcome. Please ensure to maintain code quality and adhere to the established clean code practices.
-
----
-
-This README template provides a comprehensive overview of the Parking Management System, highlighting its structure, dependencies, testing practices, and adherence to clean code principles. Feel free to modify or expand any sections as needed for your specific project documentation.
-
-# RD Training FEB 2021 – Project Documentation
-
-## Name of Project: Smart Parking
+## Name of Project: Parking Management System
 ### About: This Project will automate parking process at XYZ Shopping Mall. There is No Reserved Parking. Users have to pay for parking on hourly basis. Parking will be done on random available slots. 
 
 #### Functionalities in the Project:
 
 - Option 1: Create a Parking Area
 Admin has option to create a Parking Area by inputting Parking Area Name and Number of Slots for that Parking area.
-
 - Option 2: Park Vehicle
 User will just provide the vehicle number and vehicle will be parked to random available slots. Also, In-Time of Vehicle should be automatically stored in the records.
 - Option 3: Unpark the Vehicle
